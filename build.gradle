@@ -19,12 +19,14 @@ repositories {
 }
 
 ext {
+    set('otelVersion', "1.33.3")
     set('springCloudVersion', "2024.0.2")
     set('okhttpVersion', "4.12.0")
     set('testKeycloakVersion', "3.3.1")
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.cloud:spring-cloud-stream-binder-rabbit'
 	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
@@ -34,6 +36,8 @@ dependencies {
     implementation 'org.springframework.retry:spring-retry'
     implementation 'org.flywaydb:flyway-database-postgresql'
 
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    runtimeOnly "io.opentelemetry.javaagent:opentelemetry-javaagent:${otelVersion}"
     runtimeOnly 'org.flywaydb:flyway-core'
     runtimeOnly 'org.postgresql:postgresql'
 	runtimeOnly 'org.postgresql:r2dbc-postgresql'
@@ -56,6 +60,10 @@ dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
+}
+
+springBoot {
+	buildInfo()
 }
 
 bootBuildImage {
